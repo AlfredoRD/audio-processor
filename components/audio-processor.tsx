@@ -289,16 +289,15 @@ export default function AudioProcessor() {
     }
   }
 
-  const handleOpenInNewTab = () => {
-    if (!downloadUrl) return
-
-    const newWindow = window.open(downloadUrl, "_blank")
-    if (newWindow) {
-      setError("Audio abierto en nueva pestaña. Haz clic derecho y selecciona 'Guardar como...' para descargarlo.")
-    } else {
-      setError("No se pudo abrir en nueva pestaña. Verifica que no estés bloqueando ventanas emergentes.")
-    }
-  }
+  const handleDownload = () => {
+    if (!downloadUrl) return;
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = file ? file.name.replace(/\.[^/.]+$/, "") + "-procesado.wav" : "audio-procesado.wav";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
 
   return (
     <Card className="w-full">
@@ -420,7 +419,7 @@ export default function AudioProcessor() {
 
             <div className="flex gap-2 w-full">
               <Button 
-                onClick={handleOpenInNewTab} 
+                onClick={handleDownload} 
                 className="flex-1 flex items-center justify-center gap-2" 
                 variant="default"
                 size="lg"
